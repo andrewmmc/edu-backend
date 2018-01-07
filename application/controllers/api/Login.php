@@ -1,62 +1,81 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') || exit('No direct script access allowed');
 require APPPATH . '/libraries/REST_Controller.php';
 
+/**
+ * Controller Login
+ * @property Members_model $Members_model
+ * @property Providers_model $Providers_model
+ */
 class Login extends REST_Controller
 {
 
-	function __construct()
-	{
-		// Construct the parent class
-		parent::__construct();
-		$this->load->model('Members_model');
-		$this->load->model('Providers_model');
-	}
+    function __construct()
+    {
+        // Construct the parent class
+        parent::__construct();
+        $this->load->model('Members_model');
+        $this->load->model('Providers_model');
+    }
 
-	public function members_post()
-	{
-		$data = $this->post();
-		$result = $this->Members_model->login_members($data);
+    /***
+     * /api/Login/members
+     * Method: POST
+     * Form-data: username, password
+     */
+    public function members_post()
+    {
+        // TODO: Return message for missing params
+        // TODO: Username, password format and length check
 
-		if ($result == FALSE) {
-			$this->response(array('status' => 'failed'));
-		} else {
-			$id = $this->Members_model->check_username_exists($data['username']);
-			$id = $id[0]->members_id;
+        $data = $this->post();
+        $result = $this->Members_model->login_members($data);
 
-			// return status, id, token, message here
-			$message = [
-				'status' => 'success',
-				'id' => $id,
-				'username' => $data['username'],
-				'token' => '',
-				'message' => 'Successful Login.'
-			];
-			$this->response($message, REST_Controller::HTTP_CREATED);
-		}
-	}
+        if (!$result) {
+            $this->response(['status' => 'failed'], REST_Controller::HTTP_UNAUTHORIZED);
+        } else {
+            $record = $this->Members_model->check_username_exists($data['username']);
 
-	public function providers_post()
-	{
-		$data = $this->post();
-		$result = $this->Providers_model->login_providers($data);
+            // successful result
+            $message = [
+                'status'   => 'success',
+                'id'       => $record[0]->members_id,
+                'username' => $data['username'],
+                'token'    => '',
+                'message'  => 'Successful Login.'
+            ];
+            $this->response($message, REST_Controller::HTTP_OK);
+        }
+    }
 
-		if ($result == FALSE) {
-			$this->response(array('status' => 'failed'));
-		} else {
-			$id = $this->Providers_model->check_username_exists($data['username']);
-			$id = $id[0]->providers_id;
+    /***
+     * /api/Login/providers
+     * Method: POST
+     * Form-data: username, password
+     */
+    public function providers_post()
+    {
+        // TODO: Return message for missing params
+        // TODO: Username, password format and length check
 
-			// return status, id, token, message here
-			$message = [
-				'status' => 'success',
-				'id' => $id,
-				'username' => $data['username'],
-				'token' => '',
-				'message' => 'Successful Login.'
-			];
-			$this->response($message, REST_Controller::HTTP_CREATED);
-		}
-	}
+        $data = $this->post();
+        $result = $this->Providers_model->login_providers($data);
+
+        if (!$result) {
+            $this->response(['status' => 'failed'], REST_Controller::HTTP_UNAUTHORIZED);
+        } else {
+            $record = $this->Providers_model->check_username_exists($data['username']);
+
+            // successful result
+            $message = [
+                'status'   => 'success',
+                'id'       => $record[0]->providers_id,
+                'username' => $data['username'],
+                'token'    => '',
+                'message'  => 'Successful Login.'
+            ];
+            $this->response($message, REST_Controller::HTTP_OK);
+        }
+    }
 
 }
