@@ -7,7 +7,6 @@ class Members_model extends CI_Model
 {
     public function __construct()
     {
-        // Call the CI_Model constructor
         parent::__construct();
     }
 
@@ -46,6 +45,7 @@ class Members_model extends CI_Model
     public function check_username_exists($username)
     {
         // TODO: Filter returned data
+
         $this->db->where('username', $username);
         $this->db->limit(1);
         $query = $this->db->get('members');
@@ -63,12 +63,7 @@ class Members_model extends CI_Model
             return false;
         }
 
-        // use password_verify here, php 5.5 or above
-        if (!(password_verify($data['password'], $result[0]->password))) {
-            return false;
-        } else {
-            return true;
-        }
+        return (password_verify($data['password'], $result[0]->password));
     }
 
     public function insert_members($data)
@@ -99,7 +94,7 @@ class Members_model extends CI_Model
         $this->db->where('members_id', $data['members_id']);
         $this->db->limit(1);
         $this->db->update('members', $this);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return ($this->db->affected_rows() >= 1);
     }
 
     public function update_members_password($members_id, $new_password)
@@ -109,7 +104,7 @@ class Members_model extends CI_Model
         $this->db->where('members_id', $members_id);
         $this->db->limit(1);
         $this->db->update('members', $this);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return ($this->db->affected_rows() >= 1);
     }
 
 }

@@ -1,10 +1,12 @@
 <?php
 
+/***
+ * Model Providers_model
+ */
 class Providers_model extends CI_Model
 {
     public function __construct()
     {
-        // Call the CI_Model constructor
         parent::__construct();
     }
 
@@ -27,14 +29,16 @@ class Providers_model extends CI_Model
 
     public function get_all_providers()
     {
-        $this->db->select('providers_id, username, title, description, city_id, phone, email, office_address, gov_registered, logo_path');
+        $this->db->select('providers_id, username, title, description, city_id, phone, email, office_address, 
+        gov_registered, logo_path');
         $query = $this->db->get('providers');
         return $query->result();
     }
 
     public function get_providers($providers_id)
     {
-        $this->db->select('providers_id, username, title, description, city_id, phone, email, office_address, gov_registered, logo_path');
+        $this->db->select('providers_id, username, title, description, city_id, phone, email, office_address, 
+        gov_registered, logo_path');
         $this->db->where('providers_id', $providers_id);
         $this->db->limit(1);
         $query = $this->db->get('providers');
@@ -52,16 +56,13 @@ class Providers_model extends CI_Model
             return false;
         }
 
-        // use password_verify here, php 5.5 or above
-        if (!(password_verify($data['password'], $result[0]->password))) {
-            return false;
-        } else {
-            return true;
-        }
+        return (password_verify($data['password'], $result[0]->password));
     }
 
     public function check_username_exists($username)
     {
+        // TODO: Filter returned data
+
         $this->db->where('username', $username);
         $this->db->limit(1);
         $query = $this->db->get('providers');
@@ -97,7 +98,7 @@ class Providers_model extends CI_Model
         $this->db->where('providers_id', $data['providers_id']);
         $this->db->limit(1);
         $this->db->update('providers', $this);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return ($this->db->affected_rows() >= 1);
     }
 
     public function update_providers_password($providers_id, $new_password)
@@ -107,7 +108,7 @@ class Providers_model extends CI_Model
         $this->db->where('providers_id', $providers_id);
         $this->db->limit(1);
         $this->db->update('providers', $this);
-        return ($this->db->affected_rows() != 1) ? false : true;
+        return ($this->db->affected_rows() >= 1);
     }
 }
 
