@@ -20,39 +20,44 @@ class Payment extends REST_Controller
          * members_id
          */
         $data = $this->post();
+
         if (empty($data)) {
             $message = [
                 'status'  => 'failed',
                 'message' => 'Missing data input.'
             ];
-            $this->response($message);
+            $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
         }
 
         $course = $this->Courses_model->get_courses($data['courses_id']);
+
         if (empty($course)) {
             $message = [
                 'status'  => 'failed',
                 'message' => 'Course does not exist!'
             ];
-            $this->response($message);
+            $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
         }
 
         $registered = $this->Courses_registration_model->get_courses_members_registration($data['courses_id'],
             $data['members_id']);
+
         if (!empty($registered)) {
             $message = [
                 'status'  => 'failed',
                 'message' => 'You already registered this course!'
             ];
-            $this->response($message);
+            $this->response($message, REST_Controller::HTTP_BAD_REQUEST);
         }
 
         $result = $this->Courses_registration_model->insert_courses_registration($data);
         $amounts = $this->Courses_model->get_courses_price($data['courses_id']);
+
         $data['registration_id'] = $result;
         $data['amounts'] = $amounts[0]->price;
 
         $result = $this->Transaction_records_model->insert_transaction_records($data);
+
         $message = [
             'status'  => 'success',
             'id'      => $result,

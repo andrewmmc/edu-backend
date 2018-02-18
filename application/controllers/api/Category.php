@@ -15,6 +15,7 @@ class Category extends REST_Controller
     public function index_get()
     {
         $result = $this->Courses_category_model->get_all_courses_category();
+
         $this->response([
             'status' => true,
             'data'   => $result

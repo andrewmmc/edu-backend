@@ -15,6 +15,7 @@ class City extends REST_Controller
     public function index_get()
     {
         $result = $this->City_model->get_all_city();
+
         $this->response([
             'status' => true,
             'data'   => $result
