@@ -26,6 +26,7 @@ class Providers extends REST_Controller
     function profile_get()
     {
         $providers_id = $this->get('providers_id');
+
         if ($providers_id === null) {
             $this->response(null, REST_Controller::HTTP_BAD_REQUEST);
         } else {
@@ -41,6 +42,7 @@ class Providers extends REST_Controller
     {
         $data = $this->post();
         $providers_id = $data['providers_id'];
+
         if ($providers_id === null) {
             $this->response(null, REST_Controller::HTTP_BAD_REQUEST);
         } else {
@@ -59,6 +61,7 @@ class Providers extends REST_Controller
         $providers_id = $data['providers_id'];
         $username = $this->Providers_model->get_providers($providers_id);
         $data['username'] = $username[0]->username;
+
         if ($providers_id === null) {
             $this->response(null, REST_Controller::HTTP_BAD_REQUEST);
         } else {
@@ -102,7 +105,7 @@ class Providers extends REST_Controller
             $this->response(null, REST_Controller::HTTP_BAD_REQUEST);
         } else {
             $result = $this->Courses_model->get_providers_courses($providers_id);
-            $courses = array();
+            $courses = [];
             for ($i = 0; $i < sizeof($result); $i++) {
                 $category = $this->Courses_category_model->get_courses_category($result[$i]->category_id);
                 $result[$i]->category_name = $category[0]->name;
@@ -137,7 +140,7 @@ class Providers extends REST_Controller
         $result = $this->Courses_model->insert_courses($data);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             // return status, members_id, message here
             $message = [
@@ -155,7 +158,7 @@ class Providers extends REST_Controller
         $result = $this->Courses_lessons_model->insert_lessons($data);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             // return status, members_id, message here
             $message = [
@@ -174,7 +177,7 @@ class Providers extends REST_Controller
         $result = $this->Courses_model->update_courses($data);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             // return status, members_id, message here
             $message = [
@@ -193,7 +196,7 @@ class Providers extends REST_Controller
             $data['end_time'], $data['status']);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             // return status, members_id, message here
             $message = [
@@ -318,7 +321,7 @@ class Providers extends REST_Controller
         $result = $this->Courses_photos_model->insert_courses_photos($data);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             $message = [
                 'status'  => 'success',
@@ -355,7 +358,7 @@ class Providers extends REST_Controller
         $result = $this->Courses_documents_model->insert_courses_documents($data);
 
         if ($result == false) {
-            $this->response(array('status' => 'failed'));
+            $this->response(['status' => 'failed']);
         } else {
             $message = [
                 'status'  => 'success',
